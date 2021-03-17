@@ -36,15 +36,11 @@ public class Login extends AppCompatActivity {
     private void requestLogin(){
         String user = mUserText.getText().toString();
         String pass = mPassword.getText().toString();
-        boolean logged = api.loginRequest(user,pass);
-        if (logged) {
-            Toast.makeText(this, "loggeado", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "no loggeado", Toast.LENGTH_SHORT).show();
-        }
+        api.loginRequest(user,pass,Home.class);
     }
 
     private void requestRegister(){
         api.registerRequest();
     }
+
 }
