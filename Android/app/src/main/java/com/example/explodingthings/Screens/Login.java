@@ -1,13 +1,14 @@
-package com.example.explodingthings;
+package com.example.explodingthings.Screens;
 
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import APIConnection.APIConnection;
+import com.example.explodingthings.R;
+
+import com.example.explodingthings.APIConnection.APIConnection;
 
 //Clase destinada a la actividad de Login
 public class Login extends AppCompatActivity {

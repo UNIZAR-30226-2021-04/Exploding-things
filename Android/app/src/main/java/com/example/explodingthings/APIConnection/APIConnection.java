@@ -1,4 +1,4 @@
-package APIConnection;
+package com.example.explodingthings.APIConnection;
 
 import android.content.Context;
 import android.content.Intent;

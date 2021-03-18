@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.explodingthings">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -10,14 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Login">
+        <activity android:name=".Screens.Game"></activity>
+        <activity android:name=".Screens.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Home"/>
+        <activity android:name=".Screens.Home" />
     </application>
 
 </manifest>
