@@ -37,7 +37,7 @@ public class Login extends AppCompatActivity {
     private void requestLogin(){
         String user = mUserText.getText().toString();
         String pass = mPassword.getText().toString();
-        api.loginRequest(user,pass,Home.class);
+        api.loginRequest(user,pass,Game.class);
     }
 
     private void requestRegister(){
