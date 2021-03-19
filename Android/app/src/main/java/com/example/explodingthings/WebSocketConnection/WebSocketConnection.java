@@ -1,7 +1,6 @@
 package com.example.explodingthings.WebSocketConnection;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
@@ -16,6 +15,7 @@ import java.util.Objects;
 public class WebSocketConnection {
 
     private Context context;
+    private WebSocketClient wsc;
 
     public WebSocketConnection(Context context) {
         this.context = context;
@@ -24,16 +24,17 @@ public class WebSocketConnection {
     public void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("http://rocketruckus.westeurope.azurecontainer.io:8080/Lobby");
+            uri = new URI("ws://localhost:8080");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
         }
 
-        WebSocketClient wsc = new WebSocketClient(uri) {
+        wsc = new WebSocketClient(uri) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-                Log.d("Websocket", "opened");
+                Log.d("Websocket", "connected to server");
+                sendMessage();
             }
 
             @Override
@@ -52,8 +53,13 @@ public class WebSocketConnection {
             }
         };
 
-        JSONObject jsonObject = new JSONObject();
-        String msg = "";
+        wsc.connect();
+    }
+
+    private void sendMessage(){
+        //JSONObject jsonObject = new JSONObject();
+        String msg = "Pepe";
+        /*
         try {
             jsonObject.put("id_user","");
             jsonObject.put("id_lobby","");
@@ -61,8 +67,8 @@ public class WebSocketConnection {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        wsc.connect();
-        //wsc.send(msg);
+        */
+        wsc.send(msg);
     }
 
     private void messageDecode(String message){
