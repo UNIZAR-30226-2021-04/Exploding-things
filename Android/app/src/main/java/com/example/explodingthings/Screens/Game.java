@@ -40,11 +40,11 @@ public class Game extends AppCompatActivity {
 
         btn.setOnClickListener((card) -> {
             int margin = correctCardsPosition();
-            addCard(card, margin);
+            addCard(margin);
         });
     }
 
-    private void addCard(View card, int margin){
+    private void addCard(int margin){
         int c = R.drawable.nope;
         ib = new ImageButton(this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(cardWidth, cardHeight);
