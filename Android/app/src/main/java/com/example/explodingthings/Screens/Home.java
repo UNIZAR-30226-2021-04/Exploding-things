@@ -8,9 +8,6 @@ import android.widget.Button;
 
 import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
-import com.example.explodingthings.WebSocketConnection.WebSocketConnection;
-
-import org.java_websocket.client.WebSocketClient;
 
 public class Home extends AppCompatActivity {
 
@@ -18,8 +15,6 @@ public class Home extends AppCompatActivity {
     private Button buttonJoinPublic;
 
     private APIConnection api;
-
-    private int id_lobby;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +30,18 @@ public class Home extends AppCompatActivity {
         });
 
         buttonJoinPublic.setOnClickListener((e) -> {
-            Intent intent = new Intent(this, GameList.class);
-            startActivity(intent);
+            visualizeGameList();
         });
     }
 
-    public void setLobby(int id_lobby){
-        this.id_lobby = id_lobby;
-        //Empezar actividad de Lobby con extra = id_lobby
+    public void joinLobby(int id_lobby){
+        Intent intent = new Intent(this, GameList.class);
+        intent.putExtra("id_lobby",id_lobby);
+        startActivity(intent);
+    }
+
+    private void visualizeGameList(){
+        Intent intent = new Intent(this, GameList.class);
+        startActivity(intent);
     }
 }

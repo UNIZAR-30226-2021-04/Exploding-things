@@ -92,7 +92,7 @@ public class APIConnection {
                         JSONObject object = new JSONObject(response);
                         int id_lobby = object.getInt("id_lobby");
                         Log.d("Game created", id_lobby + "");
-                        home.setLobby(id_lobby);
+                        home.joinLobby(id_lobby);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
