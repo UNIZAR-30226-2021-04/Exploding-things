@@ -41,7 +41,7 @@ public class GameList extends AppCompatActivity {
 
         mList.setOnItemClickListener((parent, view, position, id_lobby) -> {
             this.id_lobby = (int)id_lobby;
-            api.joinGameRequest(5,(int)id_lobby,this);
+            api.joinLobbyRequest(5,(int)id_lobby,this);
         });
     }
 

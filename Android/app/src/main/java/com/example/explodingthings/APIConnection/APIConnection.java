@@ -13,6 +13,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.explodingthings.Screens.GameList;
 import com.example.explodingthings.Screens.Home;
+import com.example.explodingthings.Screens.Lobby;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,7 +69,7 @@ public class APIConnection {
                         JSONArray object = new JSONArray(response);
                         ArrayList<Object> gameList = toStringArray(object);
                         gl.fillData((String[])gameList.get(0), (int[])gameList.get(1));
-                        Log.d("Lobby", gameList + "");
+                        Log.d("Game list", gameList + "");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -90,7 +91,7 @@ public class APIConnection {
                     try {
                         JSONObject object = new JSONObject(response);
                         int id_lobby = object.getInt("id_lobby");
-                        Log.d("Login", id_lobby + "");
+                        Log.d("Game created", id_lobby + "");
                         home.setLobby(id_lobby);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -104,7 +105,7 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void joinGameRequest(int id_user, int id_lobby, GameList gl){
+    public void joinLobbyRequest(int id_user, int id_lobby, GameList gl){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",
@@ -112,7 +113,7 @@ public class APIConnection {
                     try {
                         JSONObject object = new JSONObject(response);
                         boolean joined = object.getBoolean("result");
-                        Log.d("Login", joined + "");
+                        Log.d("Lobby join", joined + "");
                         gl.joinLobby();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -126,7 +127,12 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-
+    public void exitLobbyRequest(int id_user, int id_lobby, Lobby lobby){
+        RequestQueue queue = Volley.newRequestQueue(this.context);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",null, null);
+        queue.add(stringRequest);
+    }
 
     /**
      * Convierte el JSONArray recibido a lista de arrays
