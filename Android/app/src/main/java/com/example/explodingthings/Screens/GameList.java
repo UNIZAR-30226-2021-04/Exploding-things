@@ -23,6 +23,8 @@ public class GameList extends AppCompatActivity {
     private SwipeRefreshLayout swipe;
     private ListView mList;
 
+    private int id_lobby;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +40,8 @@ public class GameList extends AppCompatActivity {
         });
 
         mList.setOnItemClickListener((parent, view, position, id_lobby) -> {
-            /*
-            Intent intent = new Intent(this, Lobby.class);
-            intent.putExtra("id_user",id_lobby);
-            startActivity(intent);
-             */
-            Toast.makeText(this, id_lobby+"", Toast.LENGTH_SHORT).show();
+            this.id_lobby = (int)id_lobby;
+            api.joinGameRequest(5,(int)id_lobby,this);
         });
     }
 
@@ -52,5 +50,23 @@ public class GameList extends AppCompatActivity {
                 new GameArrayAdapter(this, R.layout.games_list_row, R.id.idGame, userList, lobbyList);
         mList.setAdapter(itemsAdapter);
         swipe.setRefreshing(false);
+    }
+
+    public void joinLobby(){
+        Intent intent = new Intent(this, Lobby.class);
+        intent.putExtra("id_lobby",id_lobby);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        api.gameListRequest(this);
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult (requestCode, resultCode, intent);
+        api.gameListRequest(this);
     }
 }

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
 import com.example.explodingthings.WebSocketConnection.WebSocketConnection;
 
@@ -26,17 +25,17 @@ public class Lobby extends AppCompatActivity {
         setContentView(R.layout.game_lobby);
         //¿Recibir de la actividad padre la conexion WebSocket establecida al crear la sala?
         webSocketConnection = new WebSocketConnection(this);//Lo dejo asi para que no de error,hay que cambiarlo por la heredada
-        //goBackButton = findViewById(R.id.backButton);
-        //startButton =  findViewById(R.id.startbutton);
-        firstPlayer = findViewById(R.id.textView);
-        secondPlayer = findViewById(R.id.textView2);
-        thirdPlayer  = findViewById(R.id.textView5);
-        fourthPlayer = findViewById(R.id.textView6);
-        startButton.setOnClickListener (view ->
+        goBackButton = findViewById(R.id.buttonBack);
+        startButton =  findViewById(R.id.buttonStartGame);
+        firstPlayer = findViewById(R.id.textPlayer1);
+        secondPlayer = findViewById(R.id.textPlayer2);
+        thirdPlayer  = findViewById(R.id.textPlayer3);
+        fourthPlayer = findViewById(R.id.textPlayer4);
+        startButton.setOnClickListener ((e) ->
                 requestStart()
                 //Comprobar numero de players en la sala y si es >= 2 transicion a game screen
         );
-        goBackButton.setOnClickListener(view ->
+        goBackButton.setOnClickListener((e) ->
                 requestExit()
                 //Cerramos sesion en la sala y vamos para atrás
         );

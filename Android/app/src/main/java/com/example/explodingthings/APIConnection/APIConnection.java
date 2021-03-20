@@ -104,7 +104,7 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void joinGameRequest(int id_user, int id_lobby){
+    public void joinGameRequest(int id_user, int id_lobby, GameList gl){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",
@@ -113,6 +113,7 @@ public class APIConnection {
                         JSONObject object = new JSONObject(response);
                         boolean joined = object.getBoolean("result");
                         Log.d("Login", joined + "");
+                        gl.joinLobby();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -128,9 +129,9 @@ public class APIConnection {
 
 
     /**
-     * Convierte el JSONArray recibido a lista de arrays (matriz)
+     * Convierte el JSONArray recibido a lista de arrays
      * @param array JSONArray que se recibe {"nuser":val,"id_lobby":val}
-     * @return lista de arrays --> columna1 = nuser; columna2 = id_lobby
+     * @return lista de arrays --> Array1 = id_users; Array2 = id_lobbys
      */
     private static ArrayList<Object> toStringArray(JSONArray array) {
         if(array == null)
