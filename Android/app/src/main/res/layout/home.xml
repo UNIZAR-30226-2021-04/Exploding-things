@@ -55,7 +55,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline5" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonJoinPublic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Unirse a partida"

@@ -24,7 +24,7 @@ public class WebSocketConnection {
     public void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://localhost:8080");
+            uri = new URI("ws://rocketruckus.westeurope.azurecontainer.io:8080/LobbyWS");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
