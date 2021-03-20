@@ -11,6 +11,8 @@ import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
 import com.example.explodingthings.WebSocketConnection.WebSocketConnection;
 
+import javax.websocket.ClientEndpoint;
+
 public class Lobby extends AppCompatActivity {
 
     private ImageButton goBackButton;
@@ -20,7 +22,7 @@ public class Lobby extends AppCompatActivity {
     private TextView thirdPlayer;
     private TextView fourthPlayer;
 
-    private WebSocketConnection webSocketConnection;
+    private WebSocketConnection wsc;
     private APIConnection api;
 
     private int numUsers;
@@ -32,8 +34,9 @@ public class Lobby extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_lobby);
         //¿Recibir de la actividad padre la conexion WebSocket establecida al crear la sala?
-        webSocketConnection = new WebSocketConnection(this);//Lo dejo asi para que no de error,hay que cambiarlo por la heredada
-
+        api = new APIConnection(this);
+        wsc = new WebSocketConnection(this);//Lo dejo asi para que no de error,hay que cambiarlo por la heredada
+        wsc.connectWebSocket();
         goBackButton = findViewById(R.id.buttonBack);
         startButton =  findViewById(R.id.buttonStartGame);
         firstPlayer = findViewById(R.id.textPlayer1);
@@ -66,8 +69,3 @@ public class Lobby extends AppCompatActivity {
     }
 
 }
-//De alguna forma estamos escuchando de la conexion establecida con el webSocket y cada vez que nos llegue info de cambios en el lobby
-//estos deberian reflejarse en la pantalla.
-//El numero de usuarios en el lobby tambien lo obtenemos de las modificaciones
-//Mi idea: Ponemos por defecto Nombres e imagenes que indiquen que ese usuario no esta conectado , y cuando tengamos una nueva conexión
-//los sustituimos por los datos del usuario nuevo que haya entrado.

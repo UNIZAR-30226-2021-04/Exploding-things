@@ -31,7 +31,7 @@ public class Home extends AppCompatActivity {
         buttonJoinPublic = findViewById(R.id.buttonJoinPublic);
 
         buttonCreatePublic.setOnClickListener((e) -> {
-            api.createGameRequest(2, this);
+            api.createGameRequest(5, this);
         });
 
         buttonJoinPublic.setOnClickListener((e) -> {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,11 +31,11 @@ public class WebSocketConnection {
             return;
         }
 
-        wsc = new WebSocketClient(uri) {
+        wsc = new WebSocketClient(uri,new Draft_17()) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
                 Log.d("Websocket", "connected to server");
-                sendMessage();
+                sendMessage(1,4);
             }
 
             @Override
@@ -44,30 +45,29 @@ public class WebSocketConnection {
 
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                Log.i("Websocket", "closed " + reason);
+                Log.i("Websocket", "Closed: " + reason);
             }
 
             @Override
             public void onError(Exception ex) {
-                Log.i("Error", Objects.requireNonNull(ex.getMessage()));
+                Log.i("Websocket", "Error: " + Objects.requireNonNull(ex.getMessage()));
             }
         };
 
         wsc.connect();
     }
 
-    private void sendMessage(){
-        //JSONObject jsonObject = new JSONObject();
-        String msg = "Pepe";
-        /*
+    private void sendMessage(int id_user, int id_lobby){
+        JSONObject jsonObject = new JSONObject();
+        String msg = null;
         try {
-            jsonObject.put("id_user","");
-            jsonObject.put("id_lobby","");
+            jsonObject.put("msg_type","crear");
+            jsonObject.put("id_user", id_user);
+            jsonObject.put("id_lobby",id_lobby);
             msg = jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        */
         wsc.send(msg);
     }
 
