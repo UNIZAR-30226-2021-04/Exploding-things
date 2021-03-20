@@ -1,24 +1,28 @@
 package servlets_frontend;
 
 import java.io.IOException;
+
+
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.*;
+
+
 
 /**
- * Servlet implementation class login
+ * Servlet implementation class abandonar_lobby
  */
-@WebServlet("/login")
-public class login extends HttpServlet {
+@WebServlet("/abandonar_lobby")
+public class abandonar_lobby extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public login() {
+    public abandonar_lobby() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -27,19 +31,11 @@ public class login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String user = request.getParameter("user");
-		String pass = request.getParameter("pass");
-		JSONObject obj = new Rck_conn().connect("LoginUser?user=" + user + "&pass=" + pass);
-		boolean result = obj.getBoolean("result");
-		if (result)
-		{
-			request.getSession().setAttribute("id_user", user);
-			request.getRequestDispatcher("home.jsp").forward(request,response);
-		} else 
-		{
-			request.setAttribute("error", "Datos erroneos");
-			request.getRequestDispatcher("login.jsp").forward(request,response);
-		}
+		String user = request.getParameter("id_user");
+		String lobby = request.getParameter("id_lobby");
+		Rck_conn con = new Rck_conn();
+		con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=d");
+		request.getRequestDispatcher("home.jsp").forward(request,response);
 	}
 
 	/**
