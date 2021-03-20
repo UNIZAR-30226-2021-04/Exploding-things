@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Screens.Game"></activity>
+        <activity android:name=".Screens.GameList"></activity>
+        <activity android:name=".Screens.Game" />
         <activity android:name=".Screens.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

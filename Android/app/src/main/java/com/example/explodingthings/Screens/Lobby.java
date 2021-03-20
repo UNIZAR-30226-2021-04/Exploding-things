@@ -26,8 +26,8 @@ public class Lobby extends AppCompatActivity {
         setContentView(R.layout.game_lobby);
         //¿Recibir de la actividad padre la conexion WebSocket establecida al crear la sala?
         webSocketConnection = new WebSocketConnection(this);//Lo dejo asi para que no de error,hay que cambiarlo por la heredada
-        goBackButton = findViewById(R.id.backButton);
-        startButton =  findViewById(R.id.startbutton);
+        //goBackButton = findViewById(R.id.backButton);
+        //startButton =  findViewById(R.id.startbutton);
         firstPlayer = findViewById(R.id.textView);
         secondPlayer = findViewById(R.id.textView2);
         thirdPlayer  = findViewById(R.id.textView5);
