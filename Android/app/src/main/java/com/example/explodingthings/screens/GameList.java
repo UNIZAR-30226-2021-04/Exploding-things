@@ -1,15 +1,17 @@
 package com.example.explodingthings.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
-import com.example.explodingthings.utils.GameArrayAdapter;
 
 public class GameList extends AppCompatActivity {
 
@@ -27,7 +29,6 @@ public class GameList extends AppCompatActivity {
         api = new APIConnection(this);
         mList = findViewById(R.id.list);
         swipe = findViewById(R.id.swipeLayout);
-        api.gameListRequest(this);
         swipe.setRefreshing(true);
 
         swipe.setOnRefreshListener(() -> {
@@ -36,13 +37,14 @@ public class GameList extends AppCompatActivity {
 
         mList.setOnItemClickListener((parent, view, position, id_lobby) -> {
             this.id_lobby = (int)id_lobby;
-            api.joinLobbyRequest(5,(int)id_lobby,this);
+            api.joinLobbyRequest(10,(int)id_lobby,this);
         });
     }
 
-    public void fillData(String[] userList, int[] lobbyList){
-        GameArrayAdapter itemsAdapter =
-                new GameArrayAdapter(this, R.layout.games_list_row, R.id.idGame, userList, lobbyList);
+    public void fillData(String[] lobbyList, int[] userList){
+        // Tenemos que meter el numero de usuarios para que se vea en la lista
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this,
+                R.layout.games_list_row,R.id.idGame,lobbyList);
         mList.setAdapter(itemsAdapter);
         swipe.setRefreshing(false);
     }

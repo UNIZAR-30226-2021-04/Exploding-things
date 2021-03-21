@@ -89,11 +89,11 @@ public class Lobby extends AppCompatActivity {
      */
     private void sendMessage(int id_user, int id_lobby, String msg_type, WebSocket ws){
         JSONObject jsonObject = new JSONObject();
-        String msg = null;
+        String msg = "";
         try {
             jsonObject.put("msg_type",msg_type);
-            jsonObject.put("id_user", id_user);
-            jsonObject.put("id_lobby",id_lobby);
+            jsonObject.put("id_user", id_user+"");
+            jsonObject.put("id_lobby",id_lobby+"");
             msg = jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -139,6 +139,7 @@ public class Lobby extends AppCompatActivity {
                 super.onOpen(webSocket, response);
                 Log.d("Websocket", "connected to server");
                 ws = webSocket;
+                sendMessage(10,6,"crear",ws);
             }
         });
         client.dispatcher().executorService().shutdown();

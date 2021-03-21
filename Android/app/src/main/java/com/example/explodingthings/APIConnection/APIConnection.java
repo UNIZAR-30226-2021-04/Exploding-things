@@ -67,8 +67,6 @@ public class APIConnection {
                         JSONArray object = new JSONArray(response);
                         ArrayList<Object> gameList = toStringArray(object);
                         gl.fillData((String[])gameList.get(0), (int[])gameList.get(1));
-                        Log.d("Game list", gameList + "");
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -90,7 +88,7 @@ public class APIConnection {
                         JSONObject object = new JSONObject(response);
                         int id_lobby = object.getInt("id_lobby");
                         Log.d("Game created", id_lobby + "");
-                        home.joinLobby(id_lobby);
+                        home.createLobby(id_lobby);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -146,6 +144,7 @@ public class APIConnection {
             for (int i = 0; i < array.length(); i++) {
                 userList[i] = Integer.parseInt((array.getJSONObject(i).getString("nuser")));
                 lobbyList[i] = (array.getJSONObject(i).getString("id_lobby"));
+                Log.d("GameList", userList[i] + " " + lobbyList[i]);
             }
         }catch (Exception e){
             e.printStackTrace();

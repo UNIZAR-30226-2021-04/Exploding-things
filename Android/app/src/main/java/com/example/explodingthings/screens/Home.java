@@ -26,7 +26,7 @@ public class Home extends AppCompatActivity {
         buttonJoinPublic = findViewById(R.id.buttonJoinPublic);
 
         buttonCreatePublic.setOnClickListener((e) -> {
-            api.createGameRequest(5, this);
+            api.createGameRequest(10, this);
         });
 
         buttonJoinPublic.setOnClickListener((e) -> {
@@ -34,8 +34,8 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    public void joinLobby(int id_lobby){
-        Intent intent = new Intent(this, GameList.class);
+    public void createLobby(int id_lobby){
+        Intent intent = new Intent(this, Lobby.class);
         intent.putExtra("id_lobby",id_lobby);
         startActivity(intent);
     }
