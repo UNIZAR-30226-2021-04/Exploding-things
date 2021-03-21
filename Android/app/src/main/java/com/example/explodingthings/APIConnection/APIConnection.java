@@ -11,17 +11,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.explodingthings.Screens.GameList;
-import com.example.explodingthings.Screens.Home;
-import com.example.explodingthings.Screens.Lobby;
+import com.example.explodingthings.screens.GameList;
+import com.example.explodingthings.screens.Home;
+import com.example.explodingthings.screens.Lobby;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class APIConnection {
 

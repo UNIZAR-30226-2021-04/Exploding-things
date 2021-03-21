@@ -1,4 +1,4 @@
-package com.example.explodingthings.Screens;
+package com.example.explodingthings.screens;
 
 import android.os.Bundle;
 import android.widget.Button;

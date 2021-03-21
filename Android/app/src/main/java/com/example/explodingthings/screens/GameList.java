@@ -1,20 +1,15 @@
-package com.example.explodingthings.Screens;
+package com.example.explodingthings.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
 import com.example.explodingthings.utils.GameArrayAdapter;
-
-import java.util.ArrayList;
 
 public class GameList extends AppCompatActivity {
 
