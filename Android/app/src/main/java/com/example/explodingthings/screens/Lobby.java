@@ -46,7 +46,6 @@ public class Lobby extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_lobby);
-        //¿Recibir de la actividad padre la conexion WebSocket establecida al crear la sala?
         SharedPreferences sharedPref = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         id_user = sharedPref.getString("user","pepe");
         api = new APIConnection(this);
