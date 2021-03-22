@@ -72,7 +72,7 @@ public class Lobby extends AppCompatActivity {
         });
         goBackButton.setOnClickListener((e) -> {
             sendMessage(id_user,id_lobby,"salir", ws);
-            api.exitLobbyRequest(id_user, id_lobby,this);
+            api.exitLobbyRequest(id_user, id_lobby);
         });
 
         OkHttpClient client = new OkHttpClient();
@@ -154,6 +154,14 @@ public class Lobby extends AppCompatActivity {
             }
         });
         client.dispatcher().executorService().shutdown();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        sendMessage(id_user, id_lobby, "salir", ws);
+        api.exitLobbyRequest(id_user, id_lobby);
     }
 
 }

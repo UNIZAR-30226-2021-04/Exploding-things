@@ -118,10 +118,10 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void exitLobbyRequest(String id_user, int id_lobby, Lobby lobby){
+    public void exitLobbyRequest(String id_user, int id_lobby){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",null, null);
+                this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=d",null, null);
         queue.add(stringRequest);
     }
 
