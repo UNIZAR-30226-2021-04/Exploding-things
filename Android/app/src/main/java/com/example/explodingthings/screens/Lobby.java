@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,15 +31,13 @@ public class Lobby extends AppCompatActivity {
 
     private ImageButton goBackButton;
     private Button startButton;
-    private TextView firstPlayer;
-    private TextView secondPlayer;
-    private TextView thirdPlayer;
-    private TextView fourthPlayer;
+    private ArrayList<TextView> userTextList;
 
     private APIConnection api;
     private WebSocket ws;
 
-    private int numUsers;
+    private int numUsers = 0;
+    private final int totalUsers = 4;
     private String id_user;
     private int id_lobby;
     private String url;
@@ -53,26 +54,22 @@ public class Lobby extends AppCompatActivity {
 
         goBackButton = findViewById(R.id.buttonBack);
         startButton =  findViewById(R.id.buttonStartGame);
-        firstPlayer = findViewById(R.id.textPlayer1);
-        secondPlayer = findViewById(R.id.textPlayer2);
-        thirdPlayer  = findViewById(R.id.textPlayer3);
-        fourthPlayer = findViewById(R.id.textPlayer4);
 
+        initUsers();
+        addUser(id_user);
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
             id_lobby = 0;
         } else {
             id_lobby = extras.getInt("id_lobby");
         }
-        Log.d("lobby", id_lobby+"");
 
         startButton.setOnClickListener ((e) -> {
             requestStart();
             //Comprobar numero de players en la sala y si es >= 2 transicion a game screen
         });
         goBackButton.setOnClickListener((e) -> {
-            sendMessage(id_user,id_lobby,"salir", ws);
-            api.exitLobbyRequest(id_user, id_lobby);
+            onBackPressed();
         });
 
         OkHttpClient client = new OkHttpClient();
@@ -80,14 +77,11 @@ public class Lobby extends AppCompatActivity {
 
     }
     private void requestStart(){
-
-
+        //Iniciar partida
     }
 
     private void fillData(){
-        //Aqui la idea sería ponernos a nosotros como jugador 1(De momento nuestro username,+ tarde nuestro icon) y distribuir al resto en los huecos libres
-        //PROBLEMA:Esto se tiene que hacer también cada vez que recibamos la info de que alguien se ha unido o ha salido de la sala
-        //No es suficiente con hacerlo al entrar.
+
     }
 
     /**
@@ -141,8 +135,21 @@ public class Lobby extends AppCompatActivity {
             public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
                 super.onMessage(webSocket, text);
                 Log.d("Received: ", text);
-                // Cada vez que llegue algo del servidor
-                // actualizamos la informacion de la pagina
+                try {
+                    JSONObject object = new JSONObject(text);
+                    String name = object.getString("id_user");
+                    String msg_type = object.getString("msg_type");
+                    switch (msg_type) {
+                        case "connected":
+                            addUser(name);
+                            break;
+                        case "disc":
+                            deleteUser(name);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -162,6 +169,33 @@ public class Lobby extends AppCompatActivity {
         super.onBackPressed();
         sendMessage(id_user, id_lobby, "salir", ws);
         api.exitLobbyRequest(id_user, id_lobby);
+    }
+
+    public void addUser(String id_user){
+        runOnUiThread(() -> {
+            userTextList.get(numUsers).setText(id_user);
+            numUsers++;
+        });
+    }
+
+    public void deleteUser(String id_user){
+        runOnUiThread(() -> {
+            for(int i=0; i<totalUsers; i++){
+                if (userTextList.get(i).getText().toString().equals(id_user)){
+                    userTextList.get(i).setText("Esperando...");
+                    break;
+                }
+            }
+        });
+        numUsers--;
+    }
+
+    private void initUsers(){
+        userTextList = new ArrayList<>();
+        userTextList.add(findViewById(R.id.textPlayer1));
+        userTextList.add(findViewById(R.id.textPlayer2));
+        userTextList.add(findViewById(R.id.textPlayer3));
+        userTextList.add(findViewById(R.id.textPlayer4));
     }
 
 }
