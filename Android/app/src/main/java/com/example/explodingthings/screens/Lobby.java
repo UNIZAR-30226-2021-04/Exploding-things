@@ -1,5 +1,7 @@
 package com.example.explodingthings.screens;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -33,10 +35,9 @@ public class Lobby extends AppCompatActivity {
 
     private APIConnection api;
     private WebSocket ws;
-    private OkHttpClient client;
 
     private int numUsers;
-    private int id_user;
+    private String id_user;
     private int id_lobby;
     private String url;
 
@@ -45,9 +46,11 @@ public class Lobby extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_lobby);
         //¿Recibir de la actividad padre la conexion WebSocket establecida al crear la sala?
+        SharedPreferences sharedPref = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
+        id_user = sharedPref.getString("user","pepe");
         api = new APIConnection(this);
-
         url = "ws://rocketruckus.westeurope.azurecontainer.io:8080/LobbyWS";
+
         goBackButton = findViewById(R.id.buttonBack);
         startButton =  findViewById(R.id.buttonStartGame);
         firstPlayer = findViewById(R.id.textPlayer1);
@@ -55,17 +58,25 @@ public class Lobby extends AppCompatActivity {
         thirdPlayer  = findViewById(R.id.textPlayer3);
         fourthPlayer = findViewById(R.id.textPlayer4);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            id_lobby = 0;
+        } else {
+            id_lobby = extras.getInt("id_lobby");
+        }
+        Log.d("lobby", id_lobby+"");
+
         startButton.setOnClickListener ((e) -> {
             requestStart();
             //Comprobar numero de players en la sala y si es >= 2 transicion a game screen
         });
         goBackButton.setOnClickListener((e) -> {
-            sendMessage(2,4,"salir", ws);
-            api.exitLobbyRequest(1, id_lobby,this);
+            sendMessage(id_user,id_lobby,"salir", ws);
+            api.exitLobbyRequest(id_user, id_lobby,this);
         });
 
-        client = new OkHttpClient();
-        startClientEndpoint();
+        OkHttpClient client = new OkHttpClient();
+        startClientEndpoint(client);
 
     }
     private void requestStart(){
@@ -87,12 +98,12 @@ public class Lobby extends AppCompatActivity {
      *                 "salir" para salir de la sala
      * @param ws WebSocket creado para la comunciación
      */
-    private void sendMessage(int id_user, int id_lobby, String msg_type, WebSocket ws){
+    private void sendMessage(String id_user, int id_lobby, String msg_type, WebSocket ws){
         JSONObject jsonObject = new JSONObject();
         String msg = "";
         try {
             jsonObject.put("msg_type",msg_type);
-            jsonObject.put("id_user", id_user+"");
+            jsonObject.put("id_user", id_user);
             jsonObject.put("id_lobby",id_lobby+"");
             msg = jsonObject.toString();
         } catch (JSONException e) {
@@ -105,7 +116,7 @@ public class Lobby extends AppCompatActivity {
      * Abrimos el endpoint cliente del websocket, el cual se comunica con el endpoint
      * del servidor
      */
-    private void startClientEndpoint() {
+    private void startClientEndpoint(OkHttpClient client) {
         Request request = new Request.Builder().url(url).build();
         client.newWebSocket(request, new WebSocketListener() {
             @Override
@@ -139,7 +150,7 @@ public class Lobby extends AppCompatActivity {
                 super.onOpen(webSocket, response);
                 Log.d("Websocket", "connected to server");
                 ws = webSocket;
-                sendMessage(10,6,"crear",ws);
+                sendMessage(id_user,id_lobby,"crear",ws);
             }
         });
         client.dispatcher().executorService().shutdown();

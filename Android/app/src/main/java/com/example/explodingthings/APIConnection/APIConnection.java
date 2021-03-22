@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.explodingthings.screens.GameList;
 import com.example.explodingthings.screens.Home;
 import com.example.explodingthings.screens.Lobby;
+import com.example.explodingthings.screens.Login;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +31,7 @@ public class APIConnection {
         this.context = context;
     }
 
-    public void loginRequest(String user, String pass, Class<?> cls){
+    public void loginRequest(String user, String pass, Login login){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "LoginUser?user=" + user + "&pass=" + pass,
@@ -39,13 +40,7 @@ public class APIConnection {
                         JSONObject object = new JSONObject(response);
                         boolean logged = object.getBoolean("result");
                         Log.d("Login", logged + "");
-                        if (logged) {
-                            Intent intent = new Intent(this.context, cls);
-                            this.context.startActivity(intent);
-                        } else {
-                            Toast.makeText(this.context, "Usuario o contraseña" +
-                                    "mal introducidos", Toast.LENGTH_SHORT).show();
-                        }
+                        login.checkLoggedAPI(logged);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -79,7 +74,7 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void createGameRequest(int id_user, Home home){
+    public void createGameRequest(String id_user, Home home){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "Lobby?id_user=" + id_user,
@@ -101,7 +96,7 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void joinLobbyRequest(int id_user, int id_lobby, GameList gl){
+    public void joinLobbyRequest(String id_user, int id_lobby, GameList gl){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",
@@ -123,7 +118,7 @@ public class APIConnection {
         queue.add(stringRequest);
     }
 
-    public void exitLobbyRequest(int id_user, int id_lobby, Lobby lobby){
+    public void exitLobbyRequest(String id_user, int id_lobby, Lobby lobby){
         RequestQueue queue = Volley.newRequestQueue(this.context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 this.Url + "Lobby?id_user=" + id_user + "&id_lobby=" + id_lobby + "&f=u",null, null);
