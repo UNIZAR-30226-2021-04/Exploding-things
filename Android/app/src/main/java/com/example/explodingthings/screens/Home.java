@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
@@ -15,6 +16,7 @@ public class Home extends AppCompatActivity {
 
     private Button buttonCreatePublic;
     private Button buttonJoinPublic;
+    private ImageButton buttonLoggout;
 
     private APIConnection api;
 
@@ -30,6 +32,16 @@ public class Home extends AppCompatActivity {
 
         buttonCreatePublic = findViewById(R.id.buttonCreatePublic);
         buttonJoinPublic = findViewById(R.id.buttonJoinPublic);
+        buttonLoggout = findViewById(R.id.buttonLoggout);
+
+        buttonLoggout.setOnClickListener((e) -> {
+            SharedPreferences userName = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = userName.edit();
+            editor.putBoolean("logged", false);
+            editor.apply();
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+        });
 
         buttonCreatePublic.setOnClickListener((e) -> {
             api.createGameRequest(id_user, this);

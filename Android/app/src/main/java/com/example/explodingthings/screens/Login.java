@@ -29,7 +29,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        checkLogged();
         api = new APIConnection(this);
         mUserText = findViewById(R.id.usernameTextLogin);
         mPassword = findViewById(R.id.passwordTextLogin);
@@ -64,11 +63,11 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
         } else {
             Toast.makeText(this, "Usuario o contraseña" +
-                    "mal introducidos", Toast.LENGTH_SHORT).show();
+                    " mal introducidos", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void checkLogged(){
+    private void checkLogged(){
         SharedPreferences userName = getSharedPreferences("preferencias", Context.MODE_PRIVATE);
         if (userName.getBoolean("logged",false)){
             Intent intent = new Intent(this, Home.class);
@@ -76,6 +75,11 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkLogged();
+    }
     // Hacer clase Sharepreference
 
 }
