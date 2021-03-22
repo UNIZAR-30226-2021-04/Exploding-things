@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.explodingthings.APIConnection.APIConnection;
 import com.example.explodingthings.R;
@@ -55,10 +56,14 @@ public class GameList extends AppCompatActivity {
         swipe.setRefreshing(false);
     }
 
-    public void joinLobby(){
-        Intent intent = new Intent(this, Lobby.class);
-        intent.putExtra("id_lobby",id_lobby);
-        startActivity(intent);
+    public void joinLobby(boolean joined){
+        if (joined) {
+            Intent intent = new Intent(this, Lobby.class);
+            intent.putExtra("id_lobby", id_lobby);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "La sala no existe", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

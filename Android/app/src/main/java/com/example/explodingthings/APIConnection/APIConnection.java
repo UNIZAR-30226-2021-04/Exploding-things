@@ -105,7 +105,7 @@ public class APIConnection {
                         JSONObject object = new JSONObject(response);
                         boolean joined = object.getBoolean("result");
                         Log.d("Lobby join", joined + "");
-                        gl.joinLobby();
+                        gl.joinLobby(joined);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
