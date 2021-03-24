@@ -42,7 +42,6 @@ public class LoginUser extends HttpServlet {
 		else { 
 			result="false";
 		}
-		System.out.println(result);
 		PrintWriter out = response.getWriter();
 		JSONObject obj = new JSONObject().put("result",result);
 		out.print(obj.toString());

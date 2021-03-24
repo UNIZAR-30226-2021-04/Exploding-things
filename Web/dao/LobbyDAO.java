@@ -11,6 +11,7 @@ import database.PoolConnectionManager;
 
 public class LobbyDAO {
 	
+	//Gestion usuarios lobby
 	private static String createLobby = "INSERT INTO Lobby DEFAULT VALUES";
 	private static String selectLobby = "SELECT TOP 1 id_lobby FROM Lobby ORDER BY id_lobby DESC";
 	private static String deleteLobby = "DELETE FROM Lobby WHERE id_lobby=?";
@@ -18,7 +19,7 @@ public class LobbyDAO {
 	private static String selectUsersLobby = "SELECT nusers FROM Lobby WHERE id_lobby=?";
 	private static String updateUserLobby = "UPDATE Lobby SET nusers=? WHERE id_lobby=?";
 	private static String deleteUserLobby = "UPDATE Users SET id_lobby=NULL WHERE Username=?";
-	private static String selectLobbys = "SELECT * FROM Lobby WHERE nusers<4";
+	private static String selectLobbys = "SELECT * FROM Lobby WHERE nusers<4 AND pstart=0";
 	
 	public Integer CrearLobby(String id_user) { 
 		Integer id_lobby = -1;

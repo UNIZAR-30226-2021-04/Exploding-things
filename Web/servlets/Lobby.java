@@ -36,8 +36,6 @@ public class Lobby extends HttpServlet {
 		LobbyDAO facade = new LobbyDAO();
 		PrintWriter out = response.getWriter();
 		
-		
-		
 		if (request.getParameter("id_user")== null) { //Refresh
 			JSONArray obj = new JSONArray();
 			ArrayList<Integer[]> lobbys = facade.SeleccionarLobbys();
