@@ -72,7 +72,7 @@ public class PartidaWS {
 	 *			- Si id_carta="Escape", enviamos a todos mensaje msg_type:"turno",id_user:(string,nombre de la persona que empieza)(pasar turno) y pasa sin robar.
 	 *			- Si id_carta="Barajar", se baraja el mazo (no devuelve nada)
 	 *			- Si id_carta="Sabotaje",enviamos a todos msg_type: turno,id_user:(string,nombre de la persona que empieza) sin robar
-	 *			- Si id_carta="Robar" o "Marciano1/2/3/4", enviamos a id_user msg_type:"robar" y id_carta:(string,nombre carta robada), enviamos a id_contrario msg_type:"robado" y id_carta:(string, nombre carta que le roban)
+	 *			- Si id_carta="Robar" o "Marciano1/2/3/4", enviamos a id_user msg_type:"robar" y id_carta:(string,nombre carta robada o vacío), enviamos a id_contrario (solo si id_carta!=vacio) msg_type:"robado" y id_carta:(string, nombre carta que le roban)
 	 *			- Si id_carta="Salvacion", si fin:true pasas turno msg_type:"turno",id_user:(string,nombre de la persona que empieza)y si no, no se envia nada. 
 	 *		
 	 *		   Si msg_type = "muerte", 
@@ -120,7 +120,7 @@ public class PartidaWS {
 							//Resto de usuarios
 							JSONObject aux = new JSONObject().put("id_user",id_user);
 							aux.put("msg_type","nuevo_jugador");
-							chat.put("message",id_user + " se ha unido a la partida " + partida.turno.size() + "/" + partida.numuser);
+							chat.put("message",id_user + " se ha unido a la partida " + (partida.turno.size()+1) + "/" + partida.numuser);
 							s.getBasicRemote().sendText(chat.toString());
 							
 							String reply = aux.toString();
@@ -225,15 +225,18 @@ public class PartidaWS {
 			case "jugar_carta":
 					partida = connected.get(id_lobby);
 					//Jugar cartas
-					cartas(partida,obj,session,facade);
+					boolean eliminar = cartas(partida,obj,session,facade);
 					//Eliminar la/las cartas utilizadas de la mano del jugador
 					String id_carta = obj.getString("id_carta");
-					facade.modificarMano(id_user, id_carta, "eliminar");
-					String aux = id_carta.substring(0,id_carta.length()-1);
-					//Si era una carta Marciano1/2/3/4 elimino su pareja
-					if (aux.equals("Marciano")) {
+					if (eliminar) {
 						facade.modificarMano(id_user, id_carta, "eliminar");
+						String aux = id_carta.substring(0,id_carta.length()-1);
+						//Si era una carta Marciano1/2/3/4 elimino su pareja
+						if (aux.equals("Marciano")) {
+							facade.modificarMano(id_user, id_carta, "eliminar");
+						}
 					}
+				
 					
 				break;
 			
@@ -339,7 +342,9 @@ public class PartidaWS {
 		}
 				
 	}
-	public void cartas(Partida partida, JSONObject obj, Session session, ManosDAO facade) {
+	public boolean cartas(Partida partida, JSONObject obj, Session session, ManosDAO facade) {
+		
+		boolean eliminar = true;
 		JSONObject chat = new JSONObject();
 		chat.put("msg_type","chat");
 		
@@ -413,46 +418,58 @@ public class PartidaWS {
 				break;
 			
 			default: //Roba una carta de un jugador o Marcianos1/2/3/4
-				chat.put("message", obj.getString("id_user") + " ha robado una carta a " + obj.getString("id_contrario") + " utilizando la carta " + obj.getString("id_carta"));
-				enviarMsj(partida,chat);
-				
+
 				String id_carta = robarCarta(obj); //Robar carta y actualizar BD
 				
-				//Enviar mensajes JSON
 				JSONObject robar = new JSONObject();
-				JSONObject robado = new JSONObject();
 				robar.put("msg_type", "robar");
 				robar.put("id_carta", id_carta);
-				robado.put("msg_type", "robado");
-				robado.put("id_carta", id_carta);
+				if(!id_carta.equals("")) {
+					chat.put("message", obj.getString("id_user") + " ha robado una carta a " + obj.getString("id_contrario") + " utilizando la carta " + obj.getString("id_carta"));
+					enviarMsj(partida,chat);
+					//Enviar mensajes JSON al contrario
+					JSONObject robado = new JSONObject();
+					robado.put("msg_type", "robado");
+					robado.put("id_carta", id_carta);
+					try {
+						partida.usuarios.get(obj.getString("id_contrario")).getBasicRemote().sendText(robado.toString());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else {
+					eliminar = false;
+				}
 				try {
+					//Enviar mensaje JSON al jugador
 					session.getBasicRemote().sendText(robar.toString());
-					partida.usuarios.get(obj.getString("id_contrario")).getBasicRemote().sendText(robado.toString());
-					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 				break;
 		}
+		return eliminar;
 		
 	}
 	public String robarCarta(JSONObject obj) {
 		ManosDAO facade =  new ManosDAO();
 		//Barajar la mano del contrario y seleccionar una carta
 		ArrayList<Mazo> manocontraria = facade.devolverMano(obj.getString("id_contrario"));
-		ArrayList<String> manocontraria_s = new ArrayList<String>();
-		for (int i = 0; i < manocontraria.size(); i++) {
-			for(int j=0;j<manocontraria.get(i).getNum();j++) {
-				manocontraria_s.add(manocontraria.get(i).getId_carta());
+		if (!manocontraria.isEmpty()) {
+			ArrayList<String> manocontraria_s = new ArrayList<String>();
+			for (int i = 0; i < manocontraria.size(); i++) {
+				for(int j=0;j<manocontraria.get(i).getNum();j++) {
+					manocontraria_s.add(manocontraria.get(i).getId_carta());
+				}
 			}
+			Collections.shuffle(manocontraria_s);
+			//Introducir esa carta en la mano de id_user y quitarla de id_contrario
+			facade.modificarMano(obj.getString("id_user"), manocontraria_s.get(0),"anyadir");
+			facade.modificarMano(obj.getString("id_contrario"), manocontraria_s.get(0),"eliminar");
+			return manocontraria_s.get(0);
 		}
-		Collections.shuffle(manocontraria_s);
-		//Introducir esa carta en la mano de id_user y quitarla de id_contrario
-		facade.modificarMano(obj.getString("id_user"), manocontraria_s.get(0),"anyadir");
-		facade.modificarMano(obj.getString("id_contrario"), manocontraria_s.get(0),"eliminar");
-		return manocontraria_s.get(0);
+		return "";
 	}
 	
 	//Realiza el proceso de enviar el nuevo turno a los jugadores de partida
