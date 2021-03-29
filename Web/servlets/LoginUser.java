@@ -14,10 +14,11 @@ import vo.UserVO;
 import org.json.*;
 
 /**
- * Servlet implementation class LoginAdmin
+ * Servlet para el login de los usuarios
  */
 @WebServlet("/LoginUser")
 public class LoginUser extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -29,21 +30,39 @@ public class LoginUser extends HttpServlet {
     }
 
 	/** 
+	 * Parametros URL user=string, pass=string (Usuario y contraseña del usuario)
+	 * Valida al usuario con user y pass de la URL. Si no es correcto devuelve JSON 'result: true' en caso contrario 'result:false'.
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		LoginUsersDAO facade = new LoginUsersDAO();
-		UserVO user = new UserVO(request.getParameter("user"),request.getParameter("pass"));
-		String result;
+		
+		LoginUsersDAO facade = new LoginUsersDAO();		//Variable para el uso de las funciones de la clase LoginUsersDAO
+		UserVO user = new UserVO(request.getParameter("user"),request.getParameter("pass"));	//Variable que representa un usuario
+		String result;	//Variable que indica si se ha podido validar el usuario correctamente
+		
 		if(facade.validateUser(user)) {
+			
+			/*
+			 * Se ha podido validar el usuario correctamente
+			 */
 			result="true";
+		
 		}
 		else { 
+		
+			/*
+			 * No se ha podido validar el usuario correctamente
+			 */
 			result="false";
+		
 		}
-		PrintWriter out = response.getWriter();
+		
+		/*
+		 * Creacion y envio del JSON por el descriptor
+		 */
 		JSONObject obj = new JSONObject().put("result",result);
+		
+		PrintWriter out = response.getWriter();
 		out.print(obj.toString());
 		out.flush();
 	}
