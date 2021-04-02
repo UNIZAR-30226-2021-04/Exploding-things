@@ -207,6 +207,10 @@ public class ManosDAO {
 			crearMano.setInt(3,0);
 			crearMano.execute();
 			
+			crearMano.setString(2, "Desastre");
+			crearMano.setInt(3,0);
+			crearMano.execute();
+			
 			/*
 			 * Agnadimos al array las cartas disponibles del mazo
 			 */
