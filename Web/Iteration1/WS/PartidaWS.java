@@ -57,11 +57,14 @@ public class PartidaWS {
 	 *		  
 	 *		  Si msg_type = "muerte" añadir numbombas:(integer, bombas que faltan de tratar)
 	 *	
-	 *		  Si msg_type = "salir" añadir numbombas:(integer, bombas que el usuario ha recibido)
+	 *		  Si msg_type = "salir" añadir numbombas:(integer, bombas que el usuario ha recibido) solo si sales con boton
+	 *									   portabilidad:(boolean, portabilidad activa false si sales con boton, true si existe portabilidad) 
 	 *
 	 *		  Si msg_type = "chat" añadir message:(string, mensaje a enviar)
 	 *
-	 *		  Si msg_type = "kick" añadir id_kick:(string, nombre de la persona a la que se expulsa) 
+	 *		  Si msg_type = "kick" añadir id_kick:(string, nombre de la persona a la que se expulsa)
+	 *
+	 * 		  Si msg_type = "reconectar" no necesita ningun parametro mas
 	 *
 	 * @return Devuelve mensajes en formato JSON
 	 *
@@ -87,10 +90,14 @@ public class PartidaWS {
 	 *		   Si msg_type = "salir",
 	 *			- Si era el turno del usuario que ha salido, reenviamos turno msg_type:"turno",id_user:(string,nombre de la persona que empieza) a todos y msg_type:"muerte",id_user:(string, nombre persona que pierde) a todos
 	 *			- Si no era el turno del usuario pero seguia jugando, enviamos msg_type:"muerte",id_user:(string, nombre persona que pierde) a todos
-	 *		  
+	 *		  	- En caso de portabilidad:true se envía al usuario msg_type:kick2
 	 *		   Si msg_type = "chat", enviamos msg_type:"chat_u",message:(string, mensaje del usuario)	
 	 *
 	 *		   Si msg_type = "kick", enviamos lo mismo que en salir y msg_type:"kick"
+	 *
+	 *		   Si msg_type = "reconectar", enviamos a nuevo id_user msg_type:"reconectar" users:(JSONArray strings nombre usuarios), turno:(string, id_user persona que tiene el turno)
+	 *												nokicks:(JSONArray strings nombre usuarios no kickeados por el usuario), mano:(JSONArray strings, nombre cartas) 
+	 *									   enviamos a antiguo id_user msg_type:"kick2"
 	 */			
 	@OnMessage
 	public void handleTextMessage(String message, Session session) {
@@ -178,10 +185,11 @@ public class PartidaWS {
 					
 					chat.put("message", msg);
 					enviarMsj(partida,chat);
+					connected.put(id_lobby,partida);
 					enviarTurno(partida);
-				}
+				}else { connected.put(id_lobby,partida);}
 				
-				connected.put(id_lobby,partida);
+				
 				
 				
 				break;
@@ -229,10 +237,13 @@ public class PartidaWS {
 				if (numbombas==0) { //Si numbombas == 0 -> paso turno
 					//Actualizamos id_turno
 					partida.id_turno= (partida.id_turno+1)%partida.numuser;
+					connected.put(id_lobby,partida);
 					//Enviar al resto el nuevo turno
 					enviarTurno(partida);
+				}else {
+					connected.put(id_lobby,partida);
 				}
-				connected.put(id_lobby,partida);
+				
 
 				break;
 			case "jugar_carta":
@@ -288,16 +299,17 @@ public class PartidaWS {
 					//Notificar a todos los jugadores de la sala el ganador o el que ha perdido
 					enviarMsj(partida,msj);
 					
+					//Guardo la nueva partida
+					connected.put(obj.getInt("id_lobby"),partida);
 					
 					if (partida.numuser!=1) { enviarTurno(partida); }
 
-					//Guardo la nueva partida
-					connected.put(obj.getInt("id_lobby"),partida);
+					
 				break;
 				
 			case "salir"://Jugador sale de la partida
 				partida = connected.get(id_lobby);
-				
+				if (obj.getBoolean("portabilidad")) { expulsarPort(partida.usuarios.get(id_user)); }
 				//Compruebas si solo queda un jugador 
 				if (partida.usuarios.size()==1) {
 					//Eliminar partida y eliminar al usuario la mano, el lobby y eliminar el mazo BD
@@ -307,12 +319,12 @@ public class PartidaWS {
 				}
 				else { //Mas de un jugador
 					partida = salirJugador(partida,id_user,facade,obj,false);
-					connected.put(id_lobby, partida);
 					chat.put("message",id_user + " ha abandonado la partida");
 					enviarMsj(partida,chat);
 					
 				}
 				facade2.DesconectarLobby(id_user, id_lobby);
+				
 				break;
 			
 			case "chat": //Envio de mensajes chat entre usuarios 
@@ -359,8 +371,56 @@ public class PartidaWS {
 				else {
 					//Anyadimos un kick a esa persona
 					partida.kicks.put(id_kick,aux_kick);
+					connected.put(id_lobby, partida);
 				}
-				connected.put(id_lobby, partida);
+				
+				break;
+			case "reconectar":
+				partida = connected.get(id_lobby);
+				JSONObject r = new JSONObject();
+				r.put("msg_type","reconectar");
+				//Usuarios 
+				//Cambiamos la sesion del usuario por la nueva y notificamos a la antigua
+				Session antiguo = partida.usuarios.get(id_user);
+				partida.usuarios.put(id_user, session);
+				connected.put(id_lobby,partida);
+				expulsarPort(antiguo);
+				//Recorrer nombres usuarios
+				JSONArray users = new JSONArray();
+				for (int i = 0;i<partida.turno.size();i++) {
+					users.put(partida.turno.get(i));
+				}
+				r.put("users", users);
+				
+				//Turno
+				r.put("turno",partida.turno.get(partida.id_turno));
+				
+				//Kicks
+				JSONArray nokicks = new JSONArray();
+				for (Map.Entry<String,ArrayList<String>> entry: partida.kicks.entrySet()) {
+					if (!entry.getValue().contains(id_user)) {
+						nokicks.put(entry.getKey());
+					}	
+				}
+				r.put("nokicks", nokicks);
+				
+				//Mano
+				JSONArray mano = new JSONArray();
+				ArrayList<Mazo> cartas = facade.devolverMano(id_user);
+				for (int i = 0; i < cartas.size(); i++) {
+					for(int j=0;j<cartas.get(i).getNum();j++) {
+						mano.put(cartas.get(i).getId_carta());
+					}
+				}
+				r.put("mano",mano);
+				try {
+					session.getBasicRemote().sendText(r.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
 				break;
 		}
 				
@@ -399,8 +459,8 @@ public class PartidaWS {
 				
 				partida.numcartas.put(obj.getString("id_user"),1); //Anula robar +2
 				partida.id_turno= (partida.id_turno+1)%partida.numuser;
-				enviarTurno(partida);
 				connected.put(obj.getInt("id_lobby"),partida);
+				enviarTurno(partida);
 				break;
 				
 			case "Barajar": //Barajar mazo
@@ -418,26 +478,31 @@ public class PartidaWS {
 				partida.id_turno= (partida.id_turno+1)%partida.numuser;//Pasas turno
 				partida.numcartas.put(obj.getString("id_user"),1); //Anula robar +2
 				partida.numcartas.put(partida.turno.get(partida.id_turno), 2); //A esa persona le añades 2 cartas a robar
-				enviarTurno(partida); //Enviamos el turno
 				connected.put(obj.getInt("id_lobby"),partida);
+				enviarTurno(partida); //Enviamos el turno		
 				break;
 			
 			case "Salvacion":
 				chat.put("message", obj.getString("id_user") + " se ha salvado por los pelos!!");
 				enviarMsj(partida,chat);
 				
-				//Compruebas si le quedan cartas por tratar (ej: 2 bombas)
-				if(obj.getBoolean("fin")) {
-					//Pasas turno
-					partida.id_turno= (partida.id_turno+1)%partida.numuser;
-					enviarTurno(partida);
-				}
 				//Borramos la carta bomba de la mano 
 				facade.modificarMano(obj.getString("id_user"),"Desastre","eliminar");
 				//Anyadir carta bomba al mazo en una posicion aleatoria de este
 				Integer random = (int) (Math.random()*(partida.mazo.size()+1));
 				partida.mazo.add(random, "Desastre");
-				connected.put(obj.getInt("id_lobby"),partida);
+				
+				//Compruebas si le quedan cartas por tratar (ej: 2 bombas)
+				if(obj.getBoolean("fin")) {
+					//Pasas turno
+					partida.id_turno= (partida.id_turno+1)%partida.numuser;
+					connected.put(obj.getInt("id_lobby"),partida);
+					enviarTurno(partida);
+				}
+				else {
+					connected.put(obj.getInt("id_lobby"),partida);
+				}
+				
 				break;
 			
 			default: //Roba una carta de un jugador o Marcianos1/2/3/4
@@ -562,13 +627,23 @@ public class PartidaWS {
 				//Comprobar turno
 				if(usuario_turno.equals(id_user)) { //Si tienes el turno
 					partida.id_turno=partida.id_turno%partida.numuser; //Modificar turno
+					connected.put(obj.getInt("id_lobby"), partida);
 					enviarTurno(partida);
 				}else { 
 					partida.id_turno=partida.turno.indexOf(usuario_turno);
+					connected.put(obj.getInt("id_lobby"), partida);
 				}
 			}
+			else {
+				connected.put(obj.getInt("id_lobby"), partida);
+			}
 		}
-		partida.usuarios.remove(id_user);
+		else {
+			partida.usuarios.remove(id_user);
+			connected.put(obj.getInt("id_lobby"), partida);
+			
+		}
+		
 		return partida;
 	}
 	
@@ -636,6 +711,16 @@ public class PartidaWS {
 			}
 			LobbyDAO facade2 =  new LobbyDAO();
 			facade2.DesconectarLobby(id_user, id_lobby);
+		}
+	}
+	public void expulsarPort(Session session) {
+		JSONObject obj = new JSONObject();
+		obj.put("msg_type", "kick2");
+		try {
+			session.getBasicRemote().sendText(obj.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
