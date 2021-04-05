@@ -3,6 +3,7 @@ INSERT INTO [dbo].[Users] VALUES('Mik','Mik',NULL);
 INSERT INTO [dbo].[Users] VALUES('Pina','Pina',NULL);
 INSERT INTO [dbo].[Users] VALUES('Alvaro','Alvaro',NULL);
 INSERT INTO [dbo].[Users] VALUES('Yorx','Yorx',NULL);
+INSERT INTO [dbo].[Users] VALUES('Carmen','Carmen',NULL);
 
 INSERT INTO Cartas VALUES('Desastre');
 INSERT INTO Cartas VALUES('Salvacion');
@@ -15,4 +16,3 @@ INSERT INTO Cartas VALUES('Marciano1');
 INSERT INTO Cartas VALUES('Marciano2');
 INSERT INTO Cartas VALUES('Marciano3');
 INSERT INTO Cartas VALUES('Marciano4');
-

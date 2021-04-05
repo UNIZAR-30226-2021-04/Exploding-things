@@ -21,7 +21,7 @@ public class LobbyDAO {
 	private static String selectLobby = "SELECT TOP 1 id_lobby FROM Lobby ORDER BY id_lobby DESC";	//Sentencia que selecciona el ultimo lobby creado
 	private static String deleteLobby = "DELETE FROM Lobby WHERE id_lobby=?"; 						//Sentencia para la eliminacion de un lobby
 	private static String adduserLobby = "UPDATE Users SET id_lobby=? WHERE Username=?"; 			//Sentencia para agnadir un usuario a un lobby
-	private static String selectUsersLobby = "SELECT nusers FROM Lobby WHERE id_lobby=?"; 			//Sentencia que selecciona el numero de usuarios dentro de un lobby
+	private static String selectUsersLobby = "SELECT nusers FROM Lobby WHERE id_lobby=? AND pstart=0"; 			//Sentencia que selecciona el numero de usuarios dentro de un lobby
 	private static String updateUserLobby = "UPDATE Lobby SET nusers=? WHERE id_lobby=?"; 			//Sentencia para modificar el numero de usuarios dentro de un lobby
 	private static String deleteUserLobby = "UPDATE Users SET id_lobby=NULL WHERE Username=?"; 		//Sentencia para sacar a un usuario de una sala
 	private static String selectLobbys = "SELECT * FROM Lobby WHERE nusers<4 AND pstart=0";			//Sentencia que devuelve los lobbys que aun no estan llenos y no han empezado
@@ -118,9 +118,13 @@ public class LobbyDAO {
 			/*
 			 * Cojemos el numero de usuarios que hay dentro de esa sala
 			 */
-			lobbyllenaR.next();
-			int nusers = lobbyllenaR.getInt(1); //Numero de usuarios en la sala a la que se quiere unir
-			
+			int nusers;
+			if (lobbyllenaR.next()){
+			    nusers = lobbyllenaR.getInt(1); //Numero de usuarios en la sala a la que se quiere unir
+			}
+			else{
+				nusers=4;
+			}
 			/*
 			 * Si el numero de usuarios es 4 quiere decir que otro u otros usuarios se nos han adelantado y
 			 * el lobby esta lleno
