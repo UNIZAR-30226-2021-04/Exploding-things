@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+.player {
+	background-color: powderblue;
+	float: left;
+	width: 25.0% ;
+	border: 5px ;
+}
+
+.player_name {
+	color: blue;
+	align: center;
+	text-align: center;
+}
+
+.portrait {
+	width: 200px ;
+	height: 200px ;
+	border: 2px solid blue;
+	align: center;
+}
