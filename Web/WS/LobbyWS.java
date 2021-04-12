@@ -204,7 +204,7 @@ public class LobbyWS {
 					
 					try {
 					
-						if (k != id_user) {
+						if (!k.equals(id_user)) {
 							
 							/*
 							 * Solo en caso de que el usuario al que se le va a enviar el mensaje sea distinto del
