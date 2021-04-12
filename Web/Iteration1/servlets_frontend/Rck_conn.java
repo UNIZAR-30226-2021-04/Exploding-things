@@ -12,9 +12,20 @@ import org.json.JSONObject;
 public class Rck_conn {
 	
 	private final static String URL = "http://rocketruckus.westeurope.azurecontainer.io:8080/";
+	//private final static String URL = "http://localhost:8080/RocketRuckus/";
 	
 	public Rck_conn() {};
 
+	/**
+	 * Conecta con otro servlet, añadiendo a la URL los parámetros proporcionados.
+	 * Recibe un objeto de tipo JSONObject con la respuesta.
+	 * 
+	 * @param parameters :Parámetros extra de la URL
+	 * 
+	 * @return obj (JSONObject con la respuesta del servlet)
+	 * 
+	 * @throws IOException
+	 */
 	public JSONObject connect(String parameters) throws IOException {
 		
 		URL url = new URL(URL+parameters);
@@ -29,6 +40,16 @@ public class Rck_conn {
 		
 	}
 	
+	/**
+	 * Conecta con otro servlet, añadiendo a la URL los parámetros proporcionados.
+	 * Recibe un objeto de tipo JSONArray con la respuesta.
+	 * 
+	 * @param parameters :Parámetros extra de la URL
+	 * 
+	 * @return obj (JSONArray con la respuesta del servlet)
+	 * 
+	 * @throws IOException
+	 */
 	public JSONArray connectArray(String parameters) throws IOException {
 		
 		URL url = new URL(URL+parameters);

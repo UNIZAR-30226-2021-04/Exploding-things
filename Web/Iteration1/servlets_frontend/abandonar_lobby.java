@@ -28,14 +28,25 @@ public class abandonar_lobby extends HttpServlet {
     }
 
 	/**
+	 * Elimina al usuario del lobby en el que estaba y le devuleve al home.
+	 * 
+	 * @param id_user :Nombre del usuario
+	 * @param id_lobby :Identificador de la partida
+	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String user = request.getParameter("id_user");
-		String lobby = request.getParameter("id_lobby");
-		Rck_conn con = new Rck_conn();
-		con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=d");
-		request.getRequestDispatcher("home.jsp").forward(request,response);
+		String user = (String) request.getSession().getAttribute("id_user");
+		if (user==null || user.isEmpty())
+		{
+			response.sendRedirect("index.html");
+		} else {
+			request.getSession().removeAttribute("doNotServe");
+			String lobby = request.getParameter("id_lobby");
+			Rck_conn con = new Rck_conn();
+			con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=d");
+			response.sendRedirect("buscar_partidas");
+		}
 	}
 
 	/**

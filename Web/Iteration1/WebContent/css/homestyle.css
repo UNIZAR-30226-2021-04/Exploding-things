@@ -9,13 +9,31 @@
 	margin: 10px;
 }
 
-.lobby {
-	height: 20px;
-	margin: 10px;
+.lobbybutton {
+	margin: 10px 10px ;
+	display: block;
 	padding: 10px;
+	border-radius: 3px;
+	background-color: pink;
+	border: 2px solid #c46493;
 }
 
 p {
 	align: center;
 	text-align: center;
 }
+
+.error {
+	text-align:center;
+	color:red;
+}
+
+#createButton {
+	display: block;
+}
+
+#searchButton {
+	display: block;
+}
+
+

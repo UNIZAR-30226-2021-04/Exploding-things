@@ -17,6 +17,7 @@
 <input type="password" id="password" name="pass" placeholder="Password"><br>
 <button type="submit">Enter</button>
 </form>
+<a href="signup.jsp">Regístrate</a>
 
 </body>
 </html>

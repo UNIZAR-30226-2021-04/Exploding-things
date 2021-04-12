@@ -24,6 +24,14 @@ public class login extends HttpServlet {
     }
 
 	/**
+	 * Permite al usuario loggearse. Si los datos son correctos, redirige al home. Si no lo son, muestra un error.
+	 * 
+	 * @param user :Nombre del usuario
+	 * @param pass :Contraseña del usuario
+	 * 
+	 * @return id_user (Nombre del usuario) si el login tiene éxito
+	 * 		   error (Mensaje de error) si el login falla
+	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,7 +42,7 @@ public class login extends HttpServlet {
 		if (result)
 		{
 			request.getSession().setAttribute("id_user", user);
-			request.getRequestDispatcher("home.jsp").forward(request,response);
+			request.getRequestDispatcher("buscar_partidas").forward(request,response);
 		} else 
 		{
 			request.setAttribute("error", "Datos erroneos");
