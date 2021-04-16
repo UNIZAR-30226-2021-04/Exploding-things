@@ -48,11 +48,16 @@ public class crear_partida extends HttpServlet {
 				Rck_conn con = new Rck_conn();
 				JSONObject obj = con.connect("Lobby?id_user=" + user);
 				String id_lobby = Integer.toString(obj.getInt("id_lobby"));
-				request.setAttribute("host", "true");
-				request.setAttribute("id_user", user);
-				request.setAttribute("id_lobby", id_lobby);
-				request.getSession().setAttribute("doNotServe", user);
-				request.getRequestDispatcher("lobby.jsp").forward(request,response);
+				if (id_lobby.contentEquals("0"))
+				{
+					response.sendRedirect("buscar_partidas");
+				} else {
+					request.setAttribute("host", "true");
+					request.setAttribute("id_user", user);
+					request.setAttribute("id_lobby", id_lobby);
+					request.getSession().setAttribute("doNotServe", user);
+					request.getRequestDispatcher("lobby.jsp").forward(request,response);
+				}
 			} else {
 				request.getSession().removeAttribute("doNotServe");
 				response.sendRedirect("buscar_partidas");

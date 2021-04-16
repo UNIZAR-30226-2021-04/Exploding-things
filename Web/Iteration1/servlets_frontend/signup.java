@@ -40,16 +40,33 @@ public class signup extends HttpServlet {
 		String user = request.getParameter("user");
 		String mail = request.getParameter("mail");
 		String pass = request.getParameter("pass");
-		JSONObject obj = new Rck_conn().connect("LoginUser?user=" + user + "&mail=" + mail + "&pass=" + pass);
-		boolean result = obj.getBoolean("result");
-		if (result)
+		String cpass = request.getParameter("cpass");
+		if (!pass.contentEquals(cpass))
 		{
-			request.getSession().setAttribute("id_user", user);
-			request.getRequestDispatcher("home.jsp").forward(request,response);
-		} else 
-		{
-			request.setAttribute("error", "El usuario ya existe");
+			request.setAttribute("error", "Las contraseñas no coinciden");
 			request.getRequestDispatcher("signup.jsp").forward(request,response);
+		} else {
+			boolean todoenorden = true;
+			if (user == null || !user.matches("^[a-zA-Z0-9]*$")) { todoenorden = false; }
+			if (mail == null || !mail.matches("^[a-zA-Z0-9@.]*$")) { todoenorden = false; }
+			if (pass == null || !pass.matches("^[a-zA-Z0-9]*$")) { todoenorden = false; }
+			if (todoenorden) 
+			{
+				JSONObject obj = new Rck_conn().connect("LoginUser?user=" + user + "&email=" + mail + "&pass=" + pass);
+				String result = obj.getString("result");
+				if (result.contentEquals("true"))
+				{
+					request.getSession().setAttribute("id_user", user);
+					request.getRequestDispatcher("home.jsp").forward(request,response);
+				} else 
+				{
+					request.setAttribute("error", result);
+					request.getRequestDispatcher("signup.jsp").forward(request,response);
+				}
+			} else {
+				request.setAttribute("error", "Solo se permiten caracteres alfanuméricos");
+				request.getRequestDispatcher("signup.jsp").forward(request,response);
+			}
 		}
 	}
 

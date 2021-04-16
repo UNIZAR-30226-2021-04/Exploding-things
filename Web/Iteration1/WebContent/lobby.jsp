@@ -77,6 +77,7 @@
     				break
     			case 4:
     				p4name.innerHTML=msg.id_user;
+    				next_user++;
     		}
     		if (am_i_host=='true' && next_user>2){
     			startButton.style.display="block";
@@ -118,8 +119,7 @@
     function fancyExit() {
     	if (get_out) {
     		var exitJSON = { msg_type: 'salir', id_user:user , id_lobby:lobby, host:am_i_host };
-        	socket.send(JSON.stringify(exitJSON));
-        	socket.close();
+    		sessionStorage.setItem("notsent_lobby",JSON.stringify(exitJSON));
         	sessionStorage.setItem("pending","abandonar_lobby?id_user="+user+"&id_lobby="+lobby)
         	return true;
     	}

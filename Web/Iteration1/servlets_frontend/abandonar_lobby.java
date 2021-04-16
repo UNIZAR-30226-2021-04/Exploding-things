@@ -45,7 +45,12 @@ public class abandonar_lobby extends HttpServlet {
 			String lobby = request.getParameter("id_lobby");
 			Rck_conn con = new Rck_conn();
 			con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=d");
-			response.sendRedirect("buscar_partidas");
+			String expulsado = request.getParameter("expulsado");
+			if (expulsado!=null && expulsado.contentEquals("true")) { 
+				response.sendRedirect("logout"); 
+			} else {
+				response.sendRedirect("buscar_partidas");
+			}
 		}
 	}
 

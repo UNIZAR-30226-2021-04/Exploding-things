@@ -37,6 +37,8 @@ public class LobbyWS {
 	@OnMessage
 	public void handleTextMessage(String message, Session session) {
 		
+		System.out.println(message);
+		
 		JSONObject obj = new JSONObject(message);		//Mensaje a enviar
 		String id_user = obj.getString("id_user");		//Id del usuario que ha enviado el mensaje
 		String id_lobby = obj.getString("id_lobby");	//Id del lobby el que se quiere unir o que se quiere crear
@@ -213,7 +215,7 @@ public class LobbyWS {
 					
 					try {
 					
-						if (k != id_user) {
+						if (!k.equals(id_user)) {
 							
 							/*
 							 * Solo en caso de que el usuario al que se le va a enviar el mensaje sea distinto del
@@ -271,14 +273,16 @@ public class LobbyWS {
 		}
 		
 		//Si era el ultimo que quedaba borramos la lobby y al host
-		
+		LobbyDAO facade = new LobbyDAO();
+		ManosDAO cartas =  new ManosDAO();
 		if (!id_user.equals("") && users_lobby.size()==1) {
+			cartas.returnMazo(id_user, Integer.parseInt(id_lobby));
+			facade.DesconectarLobby(id_user, Integer.parseInt(id_lobby));
 			connected.remove(id_lobby);
 			vhost.remove(id_user);
 		}
 		else if (!id_user.equals("")) {
-			LobbyDAO facade = new LobbyDAO();
-			ManosDAO cartas =  new ManosDAO();
+			
 			cartas.returnMazo(id_user, Integer.parseInt(id_lobby));
 			facade.DesconectarLobby(id_user, Integer.parseInt(id_lobby));
 			

@@ -83,22 +83,34 @@
     
     function pending()
     {
-    	if(sessionStorage.getItem("pending")){
-    		var newloc = sessionStorage.getItem("pending");
-    		sessionStorage.removeItem("pending");
-    		location.replace(newloc);
-    	}
     	if(sessionStorage.getItem("notsent")){
     		var exitJSON=sessionStorage.getItem("notsent");
-    		console.log(exitJSON);
     		const socket = new WebSocket("ws://rocketruckus.westeurope.azurecontainer.io:8080/PartidaWS");
     	    //const socket = new WebSocket("ws://localhost:8080/RocketRuckus/PartidaWS");
     	    socket.binaryType = "arraybuffer";
     	    socket.onopen = function (event) {
     	    	socket.send(exitJSON);
     	    	socket.close();
+        	    sessionStorage.removeItem("notsent");
     	    };
-    	    sessionStorage.removeItem("notsent");
+    	}
+    	
+    	if(sessionStorage.getItem("notsent_lobby")){
+    		var exitJSON=sessionStorage.getItem("notsent_lobby");
+    		const socket = new WebSocket("ws://rocketruckus.westeurope.azurecontainer.io:8080/LobbyWS");
+    	    //const socket = new WebSocket("ws://localhost:8080/RocketRuckus/LobbyWS");
+    	    socket.binaryType = "arraybuffer";
+    	    socket.onopen = function (event) {
+    	    	socket.send(exitJSON);
+    	    	socket.close();
+        	    sessionStorage.removeItem("notsent_lobby");
+    	    };
+    	}
+    	
+    	if(sessionStorage.getItem("pending")){
+    		var newloc = sessionStorage.getItem("pending");
+    		sessionStorage.removeItem("pending");
+    		location.replace(newloc);
     	}
     	
     	document.getElementById("searchButton").disabled = false;

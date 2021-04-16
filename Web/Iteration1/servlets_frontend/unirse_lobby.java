@@ -47,7 +47,7 @@ public class unirse_lobby extends HttpServlet {
 			if (doNotServe==null) {
 				String lobby = request.getParameter("id_lobby");
 				Rck_conn con = new Rck_conn();
-				JSONObject obj = con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=u");
+				JSONObject obj = con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=u" );
 				boolean result = obj.getBoolean("result");
 				if (result) 
 				{

@@ -212,6 +212,7 @@
 		    	else {
 		    		showMessage('Ese jugador no tiene cartas...','sysmsg');
 		    	}
+    			my_turn=true;
 				break;
     		case 'eureka':
     			//TODO - MOSTRAR CARTAS
@@ -421,11 +422,11 @@
     //Dado el id de un jugador, envía un robo de carta
     function stealCard(victim_id){
     	if(heistMode){
+	    	my_turn=false;
     		heistMode=false;
     		var thief = document.getElementById(heistCard);
     		var cardJSON = { msg_type: 'jugar_carta', id_user:user , id_lobby:lobby, id_contrario:victim_id, id_carta:thief.innerHTML};
 	    	socket.send(JSON.stringify(cardJSON));
-	    	my_turn=false;
     	}
     }
     

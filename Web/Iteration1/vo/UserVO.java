@@ -4,15 +4,26 @@ public class UserVO {
 	
 	private String userName;	//Nombre del usuario
 	private String password;	//Contrasegna de este
+	private String email;
 
 	/**
 	 * Constructor de la clase
 	 * @param userName Nombre del usuario
 	 * @param password Contrasegna del usuario
+	 * @param email Email del usuario
 	 */
-	public UserVO(String userName, String password) {
+	public UserVO(String userName, String password, String email) {
 		this.userName = userName;
 		this.password = password;
+		this.email = email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/**
