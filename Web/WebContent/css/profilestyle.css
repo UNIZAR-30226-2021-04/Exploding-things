@@ -1,0 +1,238 @@
+@charset "UTF-8";
+
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height:100%;
+	z-index:-1;
+}
+
+button {
+	padding: 10px 20px;
+	border-radius: 5px ;
+	border: 5px outset #ff4080;
+	background-color: pink;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+}
+
+p{
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+}
+
+input{
+	padding: 10px;
+	text-align:center;
+}
+
+#prof_title {
+	margin: 10px auto;
+	display: inline-block;
+	margin-left: 36.5%;
+	text-align: center;
+	background-color: rgba(184,124,170,0.9);
+	padding: 10px 50px;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 25px;
+	border-radius:10px;
+	border: 5px solid #ffe8af;
+}
+
+#back_button {
+	margin: 10px auto;
+	margin-left: 20px;
+}
+
+#container {
+	display:flex;
+	margin: 10px;
+}
+
+.column {
+	background: rgba(184,124,170,0.9);
+	padding: 10px;
+	height: 800px;
+	margin: 10px 10px;
+	border: 5px solid #ffe8af;
+	border-radius: 10px ;
+	padding: 10px;
+	align-items: center;
+	flex: 1 1 33%;
+	text-align: center;
+	overflow-y: hidden;
+}
+
+.column_img_div{
+	display:flex;
+	height:300px;
+	margin:20px auto;
+	justify-content:center;
+	align-items:center;
+}
+
+#icon {
+	display: block;
+	margin: auto;
+	border: 5px solid #ffe8af;
+	border-radius: 25% ;
+	width: 200px;
+	height: 200px;
+}
+
+#friends_img {
+	display: block;
+	margin: auto;
+	max-width: 300px;
+	max-height: 300px;
+}
+
+#newFriend_div {
+	margin: 20px;
+	padding: 10px;
+}
+
+#newFriend_input {
+	padding: 10px;
+}
+
+#addFriend_button {
+	display: inline-block;
+	margin: 10px auto;
+}
+
+#solicitudes {
+	display: none;
+}
+
+#friend_list {
+	display: block;
+	margin: 20px 20px;
+	overflow-y: auto;
+	background-color: pink;
+	border-radius: 10px; 
+	text-align: center;
+	padding:10px;
+	height: 37.5%;
+}
+
+.friend {
+	display: block;
+	margin: 5px auto;
+	text-align: center;
+	padding: 5px 10px;
+	background-color: rgba(184,124,170,0.9);
+	border-radius:15px;
+	border: 5px solid #ffe8af;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+}
+
+.deleteFriend {
+	float: right;
+}
+
+.friendRequest {
+	display: block;
+	margin: 5px auto;
+	text-align: center;
+	padding: 5px 10px;
+	background-color: rgba(184,124,170,0.5);
+	border-radius:5px;
+	border: 5px outset #ffe8af;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+}
+
+#modal-text {
+	text-align: center;
+}
+
+#info {
+	text-align:center;
+}
+
+.info_div{
+	margin: 20px auto;
+}
+
+.submit_info {
+	margin: 5px;
+	padding: 1px;
+	border-radius: 3px;
+	border: 3px outset #ff4080;
+	display:none;
+}
+
+.edit_info {
+	margin: 5px;
+	padding: 1px;
+	border-radius: 3px;
+	border: 3px outset #ff4080;
+	display: inline-block;
+}
+
+#partidas {
+	margin: 20px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+
+#games {
+	display: inline-block;
+	margin-right: 20px;
+	padding:10px; 
+}
+
+#wins {
+	display: inline-block;
+	margin-left: 20px;
+	padding:10px; 
+}
+
+#achievements {
+	display: block;
+	margin: 20px 20px;
+	overflow-y: auto;
+	background-color: pink;
+	border-radius: 10px; 
+	text-align: center;
+	padding:10px;
+	height: 37.5%;
+}
+
+.achievement{
+	display: block;
+	margin: 5px auto;
+	text-align: center;
+	padding: 5px 10px;
+	background-color: rgba(184,124,170,0.9);
+	border-radius:15px;
+	border: 5px solid #ffe8af;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+	height: 50px;
+}
+
+.locked_achievement{
+	display: block;
+	margin: 5px auto;
+	text-align: center;
+	padding: 5px 10px;
+	background-color: grey;
+	border-radius:15px;
+	border: 5px solid #555753;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px;
+	height: 50px;
+}
+
+.ach_icon {
+	height: 50px;
+	width: 50px;
+	float: left;
+}
+
+

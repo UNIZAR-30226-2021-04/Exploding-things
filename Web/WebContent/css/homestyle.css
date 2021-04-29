@@ -1,21 +1,160 @@
 @charset "UTF-8";
 
-.game_div {
-	background-color: powderblue;
-	float: left;
-	width: 45.0% ;
-	height: 800px;
-	border: 5px ;
-	margin: 10px;
-}
-
-.lobby {
-	height: 20px;
-	margin: 10px;
-	padding: 10px;
-}
-
 p {
-	align: center;
+	font-family: 'Patrick Hand', cursive;
 	text-align: center;
+	font-size: 25px
+}
+
+button {
+	text-align: center;
+	font-family: 'Patrick Hand', cursive;
+	font-size: 20px
+}
+
+#background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height:100%;
+	z-index:-1;
+}
+
+#upperbar {
+	display: flex;
+	background: rgba(184,124,170,0.9);
+	padding: 10px;
+	height:10%;
+	margin: 10px auto;
+	border: 5px solid #ffe8af;
+	border-radius: 10px ;
+}
+
+#playerPortrait {
+	margin: auto;
+	margin-right: 20px;
+	width: 75px;
+	height: 75px;
+	flex: 0 0 auto;
+}
+
+#playerName{
+	font-family: 'Zen dots', cursive;
+}
+
+#mailButton {
+	margin: auto;
+	margin-right: 20px;
+	flex: 0 0 auto;
+	padding: 10px 20px;
+	border-radius: 5px ;
+	border: 3px solid #ff4080;
+	background-color: pink;
+}
+
+#searchButton {
+	margin: auto;
+	margin-right: 20px;
+	flex: 0 0 auto;
+	padding: 10px 20px;
+	border-radius: 5px ;
+	border: 3px solid #ff4080;
+	background-color: pink;
+}
+
+#logoutButton {
+	margin: auto;
+	margin-right: 20px;
+	flex: 0 0 auto;
+	padding: 10px 20px;
+	border-radius: 5px ;
+	border: 3px solid #ff4080;
+	background-color: pink;
+}
+
+#mainscreen {
+	display: flex;
+	margin: 10px auto;
+}
+
+.game_div {
+	background: rgba(184,124,170,0.9);
+	max-width: 50.0% ;
+	min-width: 30%;
+	padding: 10px;
+	height: 80%;
+	border: 5px ;
+	margin: 10px auto;
+	display: flex ;
+	flex-direction: column;
+	overflow:hidden;
+	border: 5px solid #ffe8af;
+	border-radius: 10px ;
+}
+
+.lobby_list {
+	flex: 1 0 auto;
+}
+
+.lobbybutton {
+	margin: auto ;
+	margin-top: 10px;
+	display: block;
+	padding: 10px 20px;
+	border-radius: 3px;
+	background-color: pink;
+	border: 3px solid #ff4080;
+	width: 60%;
+	flex: none;
+}
+
+.lobby_img {
+	max-width: 400px;
+	max-height:400px;
+	margin: 5px auto;
+	flex: 0 1 400px;
+}
+
+
+.createButton {
+	margin: 10px auto ;
+	width: auto;
+	display: block;
+	padding: 10px 20px;
+	border-radius: 5px; 
+	border: 3px solid #ff4080;
+	background-color: pink;
+	flex: 0 0 5%
+}
+
+
+#pub_lobbys{
+	margin-right:10px
+}
+
+#priv_lobbys{
+	margin-left:10px
+}
+
+.error {
+	text-align:center;
+	color:red;
+}
+
+#passInput {
+	margin: 5px auto;
+	margin-bottom: 10px;
+	display: block;
+	box-shadow: 0px 2px 2px #27213c, 0 0 2px grey;
+}
+
+#submitPassButton {
+	margin: 5px auto;
+	margin-top: 15px;
+	display: block;
+	padding: 10px;
+	border-radius: 5px ;
+	border: 3px solid #ff4080;
+	background-color: pink;
 }

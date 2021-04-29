@@ -26,22 +26,57 @@ public class unirse_lobby extends HttpServlet {
     }
 
 	/**
+	 * Mete al usuario dentro del lobby seleccionado, si es posible hacerlo. Si el lobby está lleno, devuelve un error.
+	 * La variable "host" indica si el usuario es host de la sala. En este caso, siempre devuelve "host" con valor false.
+	 * 
+	 * @param id_user :Nombre del usuario
+	 * @param id_lobby :Identificador de la partida
+	 * 
+	 * @return id_user (Nombre del usuario) id_lobby (Identificador de la partida) host ("true" si el usuario es host de la partida, "false" si no lo es)
+	 * 			si se introduce al usuario en el lobby con éxito
+	 * 			error (Mensaje de error) si el lobby está lleno.
+	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String user = request.getParameter("id_user");
-		String lobby = request.getParameter("id_lobby");
-		Rck_conn con = new Rck_conn();
-		JSONObject obj = con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=u");
-		boolean result = obj.getBoolean("result");
-		if (result) 
-		{
-			request.setAttribute("id_user", user);
-			request.setAttribute("id_lobby", lobby);
-			request.getRequestDispatcher("lobby.jsp").forward(request,response);
+		String user = (String) request.getSession().getAttribute("id_user");
+		if(user==null||user.isEmpty()) {
+			response.sendRedirect("index.html");
 		} else {
-			request.setAttribute("error", "El lobby está lleno");
-			request.getRequestDispatcher("home.jsp").forward(request,response);
+			String doNotServe = (String) request.getSession().getAttribute("doNotServe");
+			if (doNotServe==null) {
+				String lobby = request.getParameter("id_lobby");
+				String pass = request.getParameter("pass");
+				Rck_conn con = new Rck_conn();
+				JSONObject obj;
+				if (pass == null)
+				{
+					obj = con.connect("Lobby?id_user=" + user + "&id_lobby=" + lobby + "&f=u");
+				}
+				else
+				{
+					obj = con.connect("Lobby?id_user=" + user + "&pass=" + pass + "&id_lobby=" + lobby + "&f=u");
+				}	
+				boolean result = obj.getBoolean("result");
+				if (result) 
+				{
+					request.getSession().setAttribute("doNotServe", user);
+					request.setAttribute("host", "false");
+					request.setAttribute("id_user", user);
+					request.setAttribute("id_lobby", lobby);
+					request.setAttribute("pass", pass);
+					obj = con.connect("Amigos?user=" + user + "&f=v");
+					String amigos = obj.getJSONArray("amigos").toString();
+					request.setAttribute("amigos", amigos);
+					request.getRequestDispatcher("lobby.jsp").forward(request,response);
+				} else {
+					request.setAttribute("error", "El lobby está lleno");
+					request.getRequestDispatcher("buscar_partidas").forward(request,response);
+				}
+			} else {
+				request.getSession().removeAttribute("doNotServe");
+				response.sendRedirect("buscar_partidas");
+			}
 		}
 	}
 
