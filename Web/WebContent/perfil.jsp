@@ -64,7 +64,7 @@
 				<input id="email_input" value="" type="text" placeholder=<%=(String)request.getSession().getAttribute("email")%> disabled>
 				<button id="edit_email" class="edit_info" onclick="editEmail()">Editar</button>
 				<button id="submit_email" class="submit_info" onclick="submitEmail()">Aceptar</button>
-				<button id="cancel_email" class="submit_info" onclick="cancelUsername()">Cancelar</button>
+				<button id="cancel_email" class="submit_info" onclick="cancelEmail()">Cancelar</button>
 			</div>
 			<div class="info_div">
 				<p>Cambio de contraseña</p>

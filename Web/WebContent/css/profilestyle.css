@@ -62,7 +62,7 @@ input{
 	align-items: center;
 	flex: 1 1 33%;
 	text-align: center;
-	overflow-y: hidden;
+	overflow-y: scroll;
 }
 
 .column_img_div{
